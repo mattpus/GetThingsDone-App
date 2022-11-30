@@ -17,12 +17,15 @@ struct AddTodoView: View {
     @State private var name: String = ""
     @State private var priority: String = "Normal"
     
-    let priorities = [ "Heigh", "Normal", "Low"]
+    let priorities = [ "High", "Normal", "Low"]
     
     @State private var errorShowing: Bool = false
     @State private var errorTitle: String = ""
     @State private var errorMessage: String = ""
     //MARK: - BODY
+    
+    @ObservedObject var theme = ThemeSettings()
+    var themes: [Theme] = themeData
     
     var body: some View{
         NavigationView {
@@ -67,7 +70,7 @@ struct AddTodoView: View {
                             .font(.system(size: 24, weight: .bold, design: .default))
                             .padding()
                             .frame(minWidth: 0, maxWidth: .infinity)
-                            .background(Color.blue)
+                            .background(themes[self.theme.themeSettings].themeColor)
                             .cornerRadius(9)
                             .foregroundColor(Color.white)
                     } //: SAVE BUTTON
@@ -92,6 +95,7 @@ struct AddTodoView: View {
                 )
             }
         } //: NAVIGATION
+        .accentColor(themes[self.theme.themeSettings].themeColor)
     }
 }
 

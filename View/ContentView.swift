@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct ContentView: View {
     //MARK - Properties
@@ -18,6 +17,9 @@ struct ContentView: View {
     @State private var showingAddTodoView: Bool = false
     @State private var animatingButton: Bool = false
     
+    
+    @ObservedObject var theme = ThemeSettings()
+    var themes: [Theme] = themeData
     //MARK  - BODY
     var body: some View {
         NavigationView {
@@ -25,24 +27,35 @@ struct ContentView: View {
                 List {
                     ForEach(self.todos, id: \.self) {  todo in
                        HStack {
+                           Circle()
+                               .frame(width: 10, height: 10, alignment: .center)
+                               .foregroundColor(self.colorize(priority: todo.priority ?? "Normal"))
                             Text(todo.name ?? "unknown")
+                               .fontWeight(.semibold)
                             
                             Spacer()
                             
                             Text(todo.priority ?? "Unknown")
-                        }
+                               .font(.footnote)
+                               .foregroundColor(Color(UIColor.systemGray2))
+                               .padding(3)
+                               .frame(minWidth: 62)
+                               .overlay(Capsule().stroke(Color(UIColor.systemGray2), lineWidth: 0.74))
+                       }//: HSTACK
+                       .padding(.vertical, 5)
                     } //: FOREACH
                     .onDelete(perform: deleteTodo)
                 } //: LIST
                 .navigationBarTitle("Todo", displayMode: .inline)
                 .navigationBarItems(
-                    leading: EditButton(),
+                    leading: EditButton() .accentColor(themes[self.theme.themeSettings].themeColor),
                     trailing:
                     Button(action: {
                     self.showingSettingsView.toggle()
                 }) {
                     Image(systemName: "paintbrush")
                 } //: ADD BUTTON
+                        .accentColor(themes[self.theme.themeSettings].themeColor)
                     .sheet(isPresented: $showingSettingsView) {
                         SettingsView()
                     }
@@ -57,12 +70,12 @@ struct ContentView: View {
                 ZStack {
                     Group {
                         Circle()
-                            .fill(Color.blue)
+                            .fill(themes[self.theme.themeSettings].themeColor)
                             .opacity(self.animatingButton ? 0.2 : 0)
                             .scaleEffect(self.animatingButton ? 1 : 0)
                             .frame(width: 68, height: 68, alignment: .center)
                         Circle()
-                            .fill(Color.blue)
+                            .fill(themes[self.theme.themeSettings].themeColor)
                             .opacity(self.animatingButton ? 0.15 : 0)
                             .scaleEffect(self.animatingButton ? 1 : 0)
                             .frame(width: 88, height: 88, alignment: .center)
@@ -77,6 +90,7 @@ struct ContentView: View {
                             .background(Circle().fill(Color("ColorBase")))
                             .frame(width: 48, height: 48, alignment: .center)
                 }
+                    .accentColor(themes[self.theme.themeSettings].themeColor)
                     .onAppear(perform: {
                         self.animatingButton.toggle()
                     })
@@ -87,6 +101,7 @@ struct ContentView: View {
                 , alignment: .bottomTrailing
             )
         }//: NAVIGATION
+       
         
     }
     //MARK: - FUNCTIONS
@@ -101,6 +116,21 @@ struct ContentView: View {
                 print(error)
             }
         }
+    }
+    
+    
+    private func colorize(priority: String) -> Color {
+        switch priority {
+        case "High":
+            return .pink
+        case "Normal":
+            return .green
+        case "Low":
+            return .blue
+        default:
+            return .gray
+        }
+        
     }
 }
 
