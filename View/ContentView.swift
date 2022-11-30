@@ -18,7 +18,7 @@ struct ContentView: View {
     @State private var animatingButton: Bool = false
     
     
-    @ObservedObject var theme = ThemeSettings()
+    @ObservedObject var theme = ThemeSettings.shared
     var themes: [Theme] = themeData
     //MARK  - BODY
     var body: some View {
@@ -101,6 +101,7 @@ struct ContentView: View {
                 , alignment: .bottomTrailing
             )
         }//: NAVIGATION
+        .navigationViewStyle(StackNavigationViewStyle())
        
         
     }

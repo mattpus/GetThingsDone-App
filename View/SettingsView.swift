@@ -14,7 +14,7 @@ struct SettingsView: View {
     //THEME
     
     let themes: [Theme] = themeData
-    @ObservedObject var theme = ThemeSettings()
+    @ObservedObject var theme = ThemeSettings.shared
     //MARK: - BODY
     var body: some View {
         NavigationView {
@@ -87,6 +87,7 @@ struct SettingsView: View {
             .background(Color("ColorBackground").edgesIgnoringSafeArea(.all))
         }//: NAVIGATION
         .accentColor(themes[self.theme.themeSettings].themeColor)
+        .navigationViewStyle(StackNavigationViewStyle())
         
     }
         

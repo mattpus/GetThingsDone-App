@@ -24,7 +24,7 @@ struct AddTodoView: View {
     @State private var errorMessage: String = ""
     //MARK: - BODY
     
-    @ObservedObject var theme = ThemeSettings()
+    @ObservedObject var theme = ThemeSettings.shared
     var themes: [Theme] = themeData
     
     var body: some View{
@@ -96,6 +96,7 @@ struct AddTodoView: View {
             }
         } //: NAVIGATION
         .accentColor(themes[self.theme.themeSettings].themeColor)
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
